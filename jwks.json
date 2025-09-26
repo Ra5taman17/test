@@ -1,0 +1,12 @@
+{
+  "keys": [
+    {
+      "kty": "RSA",
+      "use": "sig",
+      "kid": "hacked-key",
+      "alg": "RS256",
+      "n": "sotdU0OlYUKgKeodQaGGidn7htm-F1M-H1gnq87wsCm2Tj0vT0xdZa9q6FXbMqXaJVDAxn0rG7fjf8uDNKS8YiUD7q1oWuas-aU1seuVMKXD8ONvjQXRwA5uzDpWEF6F5V3RrQTI7ioM9CWQ1wl8DK_Jrn0ZFw71VLFBNQUincZKhNGUq3AlQMNiCTab6j9fzmnXdCr3P85AkIa9NMjnNSgyjCEw68fWxdyG4Ne0dZvkE-A-gkrVY_wEmfp4KP_JjT6UJzFALaxtKXULvQS4AIx2QSH7yxh3kYnvu9B-07GJdfhhuo5XPJVERnkYDEckHKScelRUY6zWDAaCuEEXVw",
+      "e": "AQAB"
+    }
+  ]
+}
